@@ -8,10 +8,6 @@ description = "Loads the mmultiplayer.dll into the process that has loaded it an
 crate-type = ["cdylib"]
 name = "AgPerfMon"
 
-[dependencies]
-winapi = "0.2.7"
-user32-sys = "0.2.0"
-
 [dependencies.windows]
 version = "0.*"
 features = [
@@ -19,6 +15,3 @@ features = [
     "Win32_System_SystemServices",
     "Win32_UI_WindowsAndMessaging",
 ]
-
-[build]
-target="i686-pc-windows-msvc"
