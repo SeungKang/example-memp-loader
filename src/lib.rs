@@ -3,8 +3,8 @@
 use std::{env, ptr, ffi::CString};
 
 use windows::{
-    Win32::Foundation::*,
-    Win32::System::SystemServices::*,
+    Win32::Foundation::HINSTANCE,
+    Win32::System::SystemServices::DLL_PROCESS_ATTACH,
     core::{PCWSTR, w},
     Win32::UI::WindowsAndMessaging::{MB_OK, MessageBoxW}
 };
