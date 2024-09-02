@@ -1,9 +1,13 @@
 #![allow(non_snake_case)]
 
-use std::ffi::CString;
-use std::ptr;
+use std::{env, ptr, ffi::CString};
 
-use windows::{ Win32::Foundation::*, Win32::System::SystemServices::*, };
+use windows::{
+    Win32::Foundation::*,
+    Win32::System::SystemServices::*,
+    core::{PCWSTR, w},
+    Win32::UI::WindowsAndMessaging::{MB_OK, MessageBoxW}
+};
 
 #[link(name = "kernel32")]
 extern "system" {
@@ -29,16 +33,38 @@ extern "system" fn DllMain(
 }
 
 fn attach() {
+    let exe_path = match env::current_exe() {
+        Ok(p) => p,
+        Err(e) => {
+            error_message_box(format!("failed to get current exe path: {e}"));
+            return;
+        }
+    };
+
+    if !exe_path.ends_with("MirrorsEdge.exe") {
+        // error_message_box("skipping loading since process is not Mirrors Edge".into());
+        return;
+    }
+
     let dll_file = "C:\\Program Files\\Mirror's Edge Multiplayer\\bin\\mmultiplayer.dll";
     let dll_file_cstring: CString = CString::new(dll_file).expect("CString::new failed");
     let h_dll: *mut u8 = unsafe {LoadLibraryA(dll_file_cstring.as_ptr())};
 
     // Check if the DLL was loaded successfully
     if h_dll == ptr::null_mut() {
-        println!("[!] Failed to load DLL: {}", dll_file);
+        error_message_box(format!("failed to load DLL: {}", dll_file));
         return;
     }
+}
 
-    // Successful load
-    println!("DLL {} Loaded successfully", dll_file);
+// https://github.com/microsoft/windows-rs/issues/973#issuecomment-1363481060
+fn error_message_box(msg: String) {
+    let msg = format!("🤕 {msg}\0");
+    let msg = msg.encode_utf16().collect::<Vec<_>>();
+    unsafe {
+        MessageBoxW(None,
+                    PCWSTR::from_raw(msg.as_ptr()),
+                    w!("Mirrors Edge Multiplayer Error"),
+                    MB_OK);
+    };
 }
