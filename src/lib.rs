@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use std::{env, ptr, ffi::CString};
+use std::{env, ptr, ffi::CString, io::Error};
 
 use windows::{
     Win32::Foundation::HINSTANCE,
@@ -47,12 +47,14 @@ fn attach() {
     }
 
     let dll_file = "C:\\Program Files\\Mirror's Edge Multiplayer\\bin\\mmultiplayer.dll";
-    let dll_file_cstring: CString = CString::new(dll_file).expect("CString::new failed");
-    let h_dll: *mut u8 = unsafe {LoadLibraryA(dll_file_cstring.as_ptr())};
+    let dll_file_cstring = CString::new(dll_file).expect("CString::new failed");
+    let h_dll = unsafe {LoadLibraryA(dll_file_cstring.as_ptr())};
 
     // Check if the DLL was loaded successfully
     if h_dll == ptr::null_mut() {
-        error_message_box(format!("failed to load DLL: {}", dll_file));
+        let os_error = Error::last_os_error();
+        error_message_box(format!("failed to load DLL ({dll_file}) - last os error: {os_error}"));
+
         return;
     }
 }
