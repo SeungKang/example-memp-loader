@@ -2,8 +2,10 @@
 name = "medge-dll"
 version = "0.1.0"
 edition = "2021"
-description = "Loads the mmultiplayer.dll into the process that has loaded it and then unloads itself."
-
+description = """
+Loads the mmultiplayer.dll into the process that has loaded it and then unloads itself.
+This is based on work by Sam Rambles:
+https://samrambles.com/guides/window-hacking-with-rust/creating-a-dll-with-rust/index.html"""
 [lib]
 crate-type = ["cdylib"]
 name = "AgPerfMon"
