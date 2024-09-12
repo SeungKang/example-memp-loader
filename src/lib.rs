@@ -1,28 +1,27 @@
 #![allow(non_snake_case)]
 
-use std::{env, ptr, ffi::CString, io::Error};
-
-use windows::{
-    Win32::Foundation::HINSTANCE,
-    Win32::System::SystemServices::DLL_PROCESS_ATTACH,
-    core::{PCWSTR, w},
-    Win32::UI::WindowsAndMessaging::{MB_OK, MessageBoxW}
-};
+use std::{env, ptr, io::Error};
 
 #[link(name = "kernel32")]
 extern "system" {
-    fn LoadLibraryA(lp_lib_file_name: *const i8) -> *mut u8;
+    fn LoadLibraryW(lp_lib_file_name: *const u16) -> *mut u8;
+}
+
+#[link(name = "user32")]
+extern "system" {
+    fn MessageBoxW(hwnd: isize, lptext: *const u16, lpcaption: *const u16, utype: u32) -> i32;
 }
 
 #[no_mangle]
 #[allow(unused_variables)]
 extern "system" fn DllMain(
-    dll_module: HINSTANCE,
+    dll_module: isize,
     call_reason: u32,
     _: *mut ())
     -> bool
 {
     // https://learn.microsoft.com/en-us/windows/win32/dlls/dllmain
+    const DLL_PROCESS_ATTACH: u32 = 1u32;
     match call_reason {
         DLL_PROCESS_ATTACH => attach(),
         _ => ()
@@ -47,8 +46,10 @@ fn attach() {
     }
 
     let dll_file = "C:\\Program Files\\Mirror's Edge Multiplayer\\bin\\mmultiplayer.dll";
-    let dll_file_cstring = CString::new(dll_file).expect("CString::new failed");
-    let h_dll = unsafe {LoadLibraryA(dll_file_cstring.as_ptr())};
+    let mut dll_file_u16 = dll_file.encode_utf16().collect::<Vec<_>>();
+    dll_file_u16.push(0);
+
+    let h_dll = unsafe {LoadLibraryW(dll_file_u16.as_ptr())};
 
     // Check if the DLL was loaded successfully
     if h_dll == ptr::null_mut() {
@@ -63,10 +64,12 @@ fn attach() {
 fn error_message_box(msg: String) {
     let msg = format!("🤕 {msg}\0");
     let msg = msg.encode_utf16().collect::<Vec<_>>();
+    let title = "Mirrors Edge Multiplayer Error\0";
+    let title = title.encode_utf16().collect::<Vec<_>>();
     unsafe {
-        MessageBoxW(None,
-                    PCWSTR::from_raw(msg.as_ptr()),
-                    w!("Mirrors Edge Multiplayer Error"),
-                    MB_OK);
+        MessageBoxW(0,
+                    msg.as_ptr(),
+                    title.as_ptr(),
+                    0);
     };
 }
