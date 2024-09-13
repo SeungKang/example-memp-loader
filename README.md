@@ -2,16 +2,18 @@
 
 **me**dge **mu**ltiplayer loader
 
-A Dll written in Rust that loads the multiplayer mod dll into Mirror's Edge when
-the game starts. This Dll is loaded by using Phantom Dll hijacking techniques
-and taking the name of the unused Dll "AgPerfMon.dll". After the multiplayer
-mod dll is loaded the memp loader Dll is deloade from the game.
+A DLL written in Rust that loads the multiplayer mod DLL into Mirror's Edge when
+the game starts. This DLL is loaded by using Phantom DLL hijacking techniques
+and taking the name of the unused DLL "AgPerfMon.dll". After the multiplayer
+mod DLL is loaded the memp loader DLL is deloade from the game.
+
+The number of dependencies have been reduced by using used rust native datatypes.
 
 [Mirror's Edge Multiplayer Mod](https://github.com/LucasOe/mmultiplayer)
 
 Referenced in my blog post: TODO add link to blog post
 
-## Build Dll
+## Build DLL
 
 1. Install Rust through rustup
 2. Install toolchain `rustup install stable-i686-pc-windows-msvc`
