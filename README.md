@@ -9,7 +9,7 @@ mod DLL is loaded the memp loader DLL is deloade from the game.
 
 [Mirror's Edge Multiplayer Mod](https://github.com/LucasOe/mmultiplayer)
 
-Referenced in my blog post: TODO add link to blog post
+Referenced in my blog post: [Chasing Ghosts: Phantom DLLs in Mirror's Edge](https://www.shonk.sh/posts/chasing-ghosts/)
 
 ## Build DLL
 
