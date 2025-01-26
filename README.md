@@ -13,6 +13,8 @@ Referenced in my blog post: [Chasing Ghosts: Phantom DLLs in Mirror's Edge](http
 
 ## Build DLL
 
+> Note: By default the `.cargo/config.toml` builds for windows 32-bit x86.
+
 1. Install Rust through rustup
 2. Install toolchain `rustup install stable-i686-pc-windows-msvc`
 3. Add target `rustup target add i686-pc-windows-msvc`
@@ -21,3 +23,10 @@ Referenced in my blog post: [Chasing Ghosts: Phantom DLLs in Mirror's Edge](http
 6. File gets created in
    `PROJECT-PATH/target/i686-pc-windows-msvc/debug/AgPerfMon.dll`
 7. Copy AgPerfMon.dll into a Dll search order directory
+
+## Additional Work
+
+- [without-dependencies](../../tree/without-dependencies) - same code as main
+  branch but without any external dependencies
+- [find-mp-dll-by-modules](../../tree/find-mp-dll-by-modules) - use mmultiplayer
+  dll relative to loader dll
